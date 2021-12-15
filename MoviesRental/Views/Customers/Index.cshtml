@@ -1,0 +1,91 @@
+﻿@model IEnumerable<MoviesRental.Models.Customer>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Customers</h1>
+
+<p>
+    @Html.ActionLink("Add new","New","Customers", "", new { @class = "btn btn-primary" })
+</p>
+<table id ="customers" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MemberShip)
+        </th>
+        <th>
+            Delete
+        </th>
+        
+    </tr>
+    </thead>
+    <tbody>
+    
+    </tbody>
+</table>
+
+@section scripts
+{
+
+    <script>
+
+
+        $(document).ready(function() {
+               var tab = $("#customers").DataTable({
+                    @*Za pomoca ajaxu, przekazujemy klientow do widoku datatable prosto z 
+                    naszego api dataSrc wyglada tak poniewaz nasz json ma format {object} - 
+                    fetchujemy dane z naszego api do datatable*@
+                    ajax: {
+                        url: "/api/customers",
+                        dataSrc: ""
+                    },
+                    columns: [
+                        {
+                            data: "name",
+                            render: function(data, type, customer) {
+                                return "<a href = '/customers/edit/" + customer.id + "'>" + customer.name;
+                            }
+                        },
+                        {
+                            data: "memberShip.name"
+                        },
+                       
+                        {
+                        data: "id",
+                        render: function(data) {
+                            return "<button class = 'btn btn-primary js-delete' data-customer-id=" + data + ">Delete</button>";
+                        }
+                        }
+                ]
+            });
+            @*Za pomoca tego kodu ajax i jquery korzystamy z naszego endpointu api delete aby 
+                usunac dany rekord*@
+            $("#customers").on("click",
+                ".js-delete",
+                function() {
+                    var bttn = $(this);
+                    bootbox.confirm("Are you sure?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/customers/" + bttn.attr("data-customer-id"),
+                                    method: "DELETE",
+                                    success: function () {
+                                        @* metody z dokumentacji datatables*@
+                                        tab.row(bttn.parents("tr")).remove().draw();
+
+                                    }
+                                });
+                            }
+                        });
+
+                });
+        });
+    </script>
+} 

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<MoviesRental.Models.Rental>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Rentals</h2>
+<p>
+    @Html.ActionLink("New", "New", "Rentals","", new{@class = "btn btn-primary"})
+</p>
+<table id="rentals" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>
+            Name of rented movie
+        </th>
+        <th>
+            Name of customer
+        </th>
+        <th>
+            Date rented
+        </th>
+        <th>
+            @Html.DisplayNameFor(rental => rental.Price)
+        </th>
+        
+
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(function() {
+            var tab = $("#rentals").DataTable({
+                ajax: {
+                    url: "/api/rentals",
+                    dataSrc: ""
+                },
+                columns:
+                [
+                    {
+                        data: "movie.movieName"
+                    },
+                    {
+                        data: "customer.name"
+                    },
+                    {
+                        data: "dateRented"
+                    },
+                    {
+                         data: "price"
+                    }
+                ]
+            });
+        });
+    </script>
+}
