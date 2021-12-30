@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using MoviesRental.Data;
 using MoviesRental.Dtos;
 using MoviesRental.Models;
@@ -30,10 +31,14 @@ namespace MoviesRental.Controllers.Api
         public IActionResult GetMovie(string query = null)
         {
             var movies = _context.Movies.Include(m => m.Genre);
-
+            
+            
             var moviesQuery = movies.Where(m => m.MovieName.Contains(query));
-            var moviesQueryBack = moviesQuery.ToList().Select(_mapper.Map<Movie, MovieDto>);
-            return Ok(moviesQueryBack);
+            var moviesDto = movies.ToList().Select(_mapper.Map<Movie, MovieDto>);
+            if (String.IsNullOrWhiteSpace(query))
+                return Ok(moviesDto);
+            
+            return Ok(moviesQuery);
         }
 
         [HttpGet("{id}")]

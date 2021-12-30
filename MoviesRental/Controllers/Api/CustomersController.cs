@@ -32,15 +32,15 @@ namespace MoviesRental.Controllers.Api
         [HttpGet]
         public IActionResult GetCustomers(string query = null)
         {
-            var customerQue = _context.Customers.Include(c => c.MemberShip);
+            var customers = _context.Customers.Include(c => c.MemberShip);
 
-            
-            var customerQuee = customerQue.Where(c => c.Name.Contains(query));
+            var customerQueryBack = customers.Where(c => c.Name.Contains(query));
+            var customersDto = customers.ToList().Select(_mapper.Map<Customer, CustomerDto>);
 
+            if (String.IsNullOrWhiteSpace(query))
+                return Ok(customersDto);
 
-            var customer = customerQuee.ToList().Select(_mapper.Map<Customer, CustomerDto>);
-
-            return Ok(customer);
+            return Ok(customerQueryBack);
         }
 
        
