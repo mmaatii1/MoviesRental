@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using MoviesRental.Data;
 using MoviesRental.Models;
@@ -10,6 +11,7 @@ using MoviesRental.ViewModels;
 
 namespace MoviesRental.Controllers
 {
+    [Authorize]
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -33,6 +35,7 @@ namespace MoviesRental.Controllers
             return View(customer);
         }
 
+        
         public IActionResult New()
         {
             var membership = _context.MemberShips.ToList();

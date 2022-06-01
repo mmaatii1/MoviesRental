@@ -80,6 +80,9 @@
                                         @* metody z dokumentacji datatables*@
                                         tab.row(bttn.parents("tr")).remove().draw();
 
+                                    },
+                                    error: function(XMLHttpRequest, textStatus, Message) { 
+                                    alert("Status: " + textStatus + " cannot delete customer, has active rental");
                                     }
                                 });
                             }

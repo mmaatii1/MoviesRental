@@ -87,11 +87,22 @@ namespace MoviesRental.Controllers.Api
         public IActionResult DeleteCustomer(int id)
         {
             var customerInDb = _context.Customers.SingleOrDefault(c => c.Id == id);
+            
             if (customerInDb == null)
                return NotFound();
-            _context.Customers.Remove(customerInDb);
-            _context.SaveChanges();
-            return Ok();
+            try
+            {
+                _context.Customers.Remove(customerInDb);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            
+           
+            
         }
     }
 }

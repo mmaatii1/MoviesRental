@@ -80,7 +80,7 @@ namespace MoviesRental.Controllers.Api
 
         // DELETE api/<CustomersController>/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteCustomer(int id)
+        public IActionResult DeleteMovie(int id)
         {
             var movieInDb = _context.Movies.SingleOrDefault(c => c.Id == id);
             if (movieInDb == null)
