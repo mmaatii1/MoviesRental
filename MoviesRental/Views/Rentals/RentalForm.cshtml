@@ -1,0 +1,43 @@
+﻿@model MoviesRental.ViewModels.RentalFormViewModel
+@{
+    ViewBag.Title = "New";
+    Layout = "_Layout";
+}
+
+<h2>@Model.ErrorMessage</h2>
+<h2>Edit Rental</h2>
+
+@using (Html.BeginForm("Save", "Rentals"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Rental.DateRented)
+        @Html.TextBoxFor(m => m.Rental.DateRented, "{0:dd/MM/yyyy}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Rental.DateRented)
+
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Rental.DateReturned)
+        @Html.TextBoxFor(m => m.Rental.DateReturned, "{0:dd/MM/yyyy}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Rental.DateReturned)
+
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Rental.Price)
+        @Html.TextBoxFor(m => m.Rental.Price, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Rental.Price)
+
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Rental.Customer.Name)
+        @Html.DropDownListFor(m => m.Rental.CustomerId, new SelectList(Model.Customers, "Id", "Name"), "Select Customer", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Rental.CustomerId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Rental.Movie.MovieName)
+        @Html.DropDownListFor(m => m.Rental.MovieId, new SelectList(Model.Movies, "Id", "MovieName"), "Select Name", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Rental.MovieId)
+    </div>
+    
+    @Html.HiddenFor(m => m.Rental.Id)
+    <button type="submit" class="btn btn-primary">Save</button>
+}

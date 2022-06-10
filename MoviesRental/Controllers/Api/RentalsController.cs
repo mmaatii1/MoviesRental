@@ -38,7 +38,7 @@ namespace MoviesRental.Controllers.Api
             foreach (var movie in movies)
             {
                 if (movie.NumberInStock == 0)
-                    return BadRequest("No movie in stock kupka");
+                    return BadRequest("No movie in stock");
                 movie.NumberInStock--;
 
                 var movierealseTimeSpan = DateTime.Today.Year - movie.ReleaseDate.Value.Year;
@@ -68,7 +68,48 @@ namespace MoviesRental.Controllers.Api
             return Ok(rentals);
         }
 
-        //trzeba dorobic tez details i delete 
+        [HttpGet("{id}")]
+        public IActionResult GetRental(int id)
+        {
+            var movie = _context.Rentals.Include(c => c.Customer).Include(m => m.Movie).SingleOrDefault(c => c.Id == id);
+            if (movie == null)
+                NotFound();
+
+            return Ok(_mapper.Map<Rental, NewRentalDto>(movie));
+        }
+
+        [HttpPut]
+        public IActionResult UpdateRental(int id, NewRentalDto newRentalDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var rentalInDb = _context.Rentals.SingleOrDefault(c => c.Id == id);
+            if (rentalInDb == null)
+                return NotFound();
+
+            _mapper.Map<NewRentalDto, Rental>(newRentalDto, rentalInDb);
+
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteRental(int id)
+        {
+            var rentalInDb = _context.Rentals.SingleOrDefault(c => c.Id == id);
+            if (rentalInDb == null)
+                NotFound();
+
+            if(rentalInDb.DateReturned == null)
+            {
+                var movie = _context.Movies.SingleOrDefault(m => m.Id == rentalInDb.MovieId);
+                movie.NumberInStock++;
+            }
+            _context.Rentals.Remove(rentalInDb);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 
     

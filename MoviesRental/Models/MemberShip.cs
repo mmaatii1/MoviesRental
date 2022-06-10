@@ -10,6 +10,7 @@ namespace MoviesRental.Models
     {
         public byte Id { get; set; }
         public short Fee { get; set; }
+        [Display(Name = "Membership name")]
         public string Name { get; set; }
         [Display(Name = "Duration of membership in months")]
         public byte DurationInMonths { get; set; }

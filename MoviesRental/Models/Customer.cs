@@ -11,6 +11,7 @@ namespace MoviesRental.Models
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "Customer name")]
         public string Name { get; set; }
 
         

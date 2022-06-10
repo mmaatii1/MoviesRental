@@ -20,9 +20,14 @@
             Date rented
         </th>
         <th>
+            Date returned
+        </th>
+        <th>
             @Html.DisplayNameFor(rental => rental.Price)
         </th>
-        
+        <th>
+            Actions
+        </th>
 
     </tr>
     </thead>
@@ -32,6 +37,10 @@
 
 @section scripts{
     <script>
+        function renderDate(data) {
+            return data == null ? "" : new Date(data).toLocaleDateString('en-GB')
+        }
+
         $(document).ready(function() {
             var tab = $("#rentals").DataTable({
                 ajax: {
@@ -47,13 +56,51 @@
                         data: "customer.name"
                     },
                     {
-                        data: "dateRented"
+                        data: "dateRented",
+                        render: function(data) {
+                            return renderDate(data)
+                        }
+                    },
+                    {
+                        data: "dateReturned",
+                        render: function(data) {
+                            return renderDate(data)
+                        }
                     },
                     {
                          data: "price"
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button class = 'btn btn-primary js-delete' data-rental-id=" + data + ">Delete</button><button style='margin-left:1em' id='details-button' class='btn btn-primary' data-rental-id=" + data + ">Details</button>";
+                        }
                     }
                 ]
             });
+
+            $('#rentals').on('click', '#details-button', function () {
+              var bttn = $(this);
+              window.location.href = "/Rentals/details/" + bttn.attr("data-rental-id");
+            });
+
+            $("#rentals").on("click",
+                ".js-delete",
+                function() {
+                    var bttn = $(this);
+                    bootbox.confirm("Are you sure?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/rentals/" + bttn.attr("data-rental-id"),
+                                    method: "DELETE",
+                                    success: function() {
+                                        tab.row(bttn.parents("tr")).remove().draw();
+                                    }
+                                });
+                            }
+                        });
+                });
         });
     </script>
 }

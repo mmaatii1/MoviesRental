@@ -1,83 +1,39 @@
-﻿@using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal
-@model dynamic
-
+﻿@model MoviesRental.ViewModels.NewRentalFormViewModel
 @{
-    ViewBag.Title = "New rental";
+    ViewBag.Title = "New";
     Layout = "_Layout";
 }
-
-<h2>New rental</h2>
+<h2>New Movie</h2>
 
 <form id ="newRental">
     <div class="form-group">
-        <label>Customer</label>
-        <input id ="customer" name ="customer" type="text" value="" class="form-control" />
+        @Html.LabelFor(m => m.Rental.Customer.Name)
+        @Html.DropDownListFor(m => m.Rental.CustomerId, new SelectList(Model.Customers, "Id", "Name"), "Select Customer", new { required = "required", @id ="customer", @name ="customer", @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Rental.CustomerId)
     </div>
     <div class="form-group">
-        <label>Movie</label>
-        <input id ="movie" name ="movie" type="text" value="" class="form-control" />
+        @Html.LabelFor(m => m.Rental.Movie.MovieName)
+        @Html.ListBoxFor(m => m.MoviesIds, new SelectList(Model.Movies, "Id", "MovieName"), new { required = "required",  @id ="movies", @name ="movies", @class = "form-control", multiple = "true"  })
+        
     </div>
-    <ul id="movies" class="list-group"></ul>
-    <button class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
-@*https://twitter.github.io/typeahead.js/examples/#remote*@
 @section Scripts
 {
     <script>
         $(document).ready(function() {
-            var viewmodel = {
-                movieIds: []
-
-
-            };
-            var customers = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                remote: {
-                    url: '/api/customers?query=%QUERY',
-                    wildcard: '%QUERY'
-                }
-            });
-            var movies = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                remote: {
-                    url: '/api/movies?query=%QUERY',
-                    wildcard: '%QUERY'
-                }
-            });
-
-            $('#customer').typeahead({
-                    minLength: 3,
-                    highlight: true
-                },
-                {
-                    name: 'customers',
-                    display: 'name',
-                    source: customers
-                }).on("typeahead:select",
-                function(e, customer) {
-                    viewmodel.customerId = customer.id;
-                });
-            $('#movie').typeahead({
-                    minLength: 3,
-                    highlight: true
-                },
-                {
-                    name: 'movies',
-                    display: 'movieName',
-                    source: movies
-                }).on("typeahead:select",
-                function(e, movie) {
-                    $("#movies").append("<li>" + movie.movieName + "</li>");
-
-                    $("#movie").typeahead("val", "");
-                    viewmodel.movieIds.push(movie.id);
-                    });
-            @*tu by sie przydala jakas walidacja przed sumbitem *@
             $("#newRental").submit(function(e) {
+                
                 e.preventDefault();
+                var customerId = $('#customer').val()
+                var movieIds = $('#movies').val();
+
+                var viewmodel = {
+                    movieIds: movieIds.map(x => parseInt(x)),
+                    customerId: parseInt(customerId)
+                };
+
                 $.ajax({
                         url: "/api/rentals",
                     method: "post",
@@ -91,7 +47,7 @@
 
                     })
                     .fail(function(error) {
-                        toastr.fail("Something weird happend, try again");
+                        toastr.error("Error: " + error.responseText);
                     });
             });
 
