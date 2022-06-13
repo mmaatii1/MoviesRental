@@ -85,9 +85,17 @@ namespace MoviesRental.Controllers.Api
             var movieInDb = _context.Movies.SingleOrDefault(c => c.Id == id);
             if (movieInDb == null)
                 NotFound();
-            _context.Movies.Remove(movieInDb);
-            _context.SaveChanges();
-            return Ok();
+           
+            try
+            {
+                _context.Movies.Remove(movieInDb);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
     }
     

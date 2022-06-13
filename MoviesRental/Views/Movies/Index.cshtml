@@ -74,6 +74,9 @@
                                     success: function() {
                                         tab.row(bttn.parents("tr")).remove().draw();
                                     }
+                                    error: function(XMLHttpRequest, textStatus, Message) { 
+                                    alert("Status: " + textStatus + " cannot delete movie, its rented");
+                                    }
                                 });
                             }
                         });
