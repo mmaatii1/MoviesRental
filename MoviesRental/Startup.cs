@@ -27,8 +27,7 @@ namespace MoviesRental
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "[moviesrentalreact]/build"; });
+            
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -43,17 +42,6 @@ namespace MoviesRental
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSpaStaticFiles();
-            app.UseRouting();
-            app.UseEndpoints(... );
-            app.UseSpa(spa => {
-                spa.Options.SourcePath = "[your--folder--name]";
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
