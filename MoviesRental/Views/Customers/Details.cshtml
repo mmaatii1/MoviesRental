@@ -7,90 +7,37 @@
 
 <h2>Details</h2>
 
-<table id ="customers" class="table table-bordered table-hover">
-    <thead>
-    <tr>
-        <th>
+<div>
+    <h4>About @Html.DisplayFor(model => model.Name)</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MemberShip)
-        </th>
-        <th>
-            Delete
-        </th>
-        
-    </tr>
-    </thead>
-    <tbody>
-    
-    </tbody>
-</table>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MemberShip.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsSubscirbedToNewsLetter)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsSubscirbedToNewsLetter)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DateOfBirth)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DateOfBirth)
+        </dd>
+    </dl>
+</div>
 <div>
     @Html.ActionLink("Back","Index","Customers","", new{@class = "btn btn-primary"})
     @Html.ActionLink("Edit","Edit","Customers",new{id = Model.Id}, new{@class = "btn btn-primary"})
 </div>
-
-@section scripts
-{
-
-    <script>
-
-
-        $(document).ready(function() {
-               var tab = $("#customers").DataTable({
-                    @*Za pomoca ajaxu, przekazujemy klientow do widoku datatable prosto z 
-                    naszego api dataSrc wyglada tak poniewaz nasz json ma format {object} - 
-                    fetchujemy dane z naszego api do datatable*@
-                    ajax: {
-                        url: "/api/customers/{id}",
-                        dataSrc: ""
-                    },
-                    columns: [
-                        {
-                            data: "name",
-                            render: function(data, type, customer) {
-                                return "<a href = '/customers/edit/" + customer.id + "'>" + customer.name;
-                            }
-                        },
-                        {
-                            data: "memberShip.name"
-                        },
-                       
-                        {
-                        data: "id",
-                        render: function(data) {
-                            return "<button class = 'btn btn-primary js-delete' data-customer-id=" + data + ">Delete</button>";
-                        }
-                        }
-                ]
-            });
-            @*Za pomoca tego kodu ajax i jquery korzystamy z naszego endpointu api delete aby 
-                usunac dany rekord*@
-            $("#customers").on("click",
-                ".js-delete",
-                function() {
-                    var bttn = $(this);
-                    bootbox.confirm("Are you sure?",
-                        function(result) {
-                            if (result) {
-                                $.ajax({
-                                    url: "/api/customers/" + bttn.attr("data-customer-id"),
-                                    method: "DELETE",
-                                    success: function () {
-                                        @* metody z dokumentacji datatables*@
-                                        tab.row(bttn.parents("tr")).remove().draw();
-
-                                    },
-                                    error: function(XMLHttpRequest, textStatus, Message) { 
-                                    alert("Status: " + textStatus + " cannot delete customer, has active rental");
-                                    }
-                                });
-                            }
-                        });
-
-                });
-        });
-    </script>
-} 
-

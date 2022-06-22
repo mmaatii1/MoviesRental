@@ -27,9 +27,12 @@ namespace MoviesRental
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+<<<<<<< HEAD
 
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "[moviesrentalreact]/build"; });
 
+=======
+>>>>>>> parent of 727f291 (Add react to project)
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
