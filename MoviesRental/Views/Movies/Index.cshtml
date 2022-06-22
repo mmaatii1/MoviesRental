@@ -24,7 +24,7 @@
             @Html.DisplayNameFor(movie => movie.NumberInStock)
         </th>
         <th>
-            Action
+            
         </th>
         
     </tr>
@@ -39,7 +39,7 @@
         $(document).ready(function() {
             var tab = $("#movies").DataTable({
                 ajax: {
-                    url: "/api/movies",
+                    url: "/api/movies/",
                     dataSrc: ""
                 },
                 columns:
@@ -84,4 +84,6 @@
 
         });
     </script>
+
+
 }

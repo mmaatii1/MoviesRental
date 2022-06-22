@@ -28,7 +28,7 @@ namespace MoviesRental.Controllers.Api
         }
 
         [HttpGet]
-        public IActionResult GetMovie(string query = null)
+        public IActionResult GetMovies(string query = null)
         {
             var movies = _context.Movies.Include(m => m.Genre);
             
